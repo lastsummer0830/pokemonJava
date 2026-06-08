@@ -1,0 +1,12 @@
+.gradle/
+build/
+out/
+
+*.class
+
+.idea/workspace.xml
+.idea/shelf/
+
+javaprj/.metadata/
+javaprj/javaprj/bin/
+javaprj/javaprj/pokemon_save.dat
