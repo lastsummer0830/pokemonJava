@@ -58,9 +58,7 @@ public class BattleEngine {
 
     public boolean startBattle(ArrayList<Pokemon> playerParty, Pokemon enemyPokemon) {
         printLog("");
-       // printLog("╔═══════════════════════════════╗");
         printLog(" 야생의 " + enemyPokemon.getName() + "이(가) 나타났다!");
-        //printLog("╚═══════════════════════════════╝");
 
         Pokemon mine = getFirstAlive(playerParty);
         if (mine == null) {
@@ -360,10 +358,8 @@ public class BattleEngine {
     }
 
     private void printStatus(Pokemon mine, Pokemon enemy) {
-        //printLog("──────────────────────────────");
         printLog(String.format("[적] %-8s HP: %3d / %3d  [%s]", enemy.getName(), enemy.getHp(), enemy.getMaxHp(), enemy.getStatusEffect().getStatus()));
         printLog(String.format("[나] %-8s HP: %3d / %3d  [%s]", mine.getName(), mine.getHp(), mine.getMaxHp(), mine.getStatusEffect().getStatus()));
-        //printLog("──────────────────────────────");
     }
 
     private int chooseAction(Pokemon mine) {
