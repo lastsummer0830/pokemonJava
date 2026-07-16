@@ -10,6 +10,7 @@ public class BattleEngine {
 
     private BattleLogger logger = System.out::println;
     private Component parentComponent;
+    private BT_Screen screen;
     private Runnable logDrainWaiter;
 
     public void setLogger(BattleLogger logger) {
@@ -57,8 +58,39 @@ public class BattleEngine {
     }
 
     public boolean startBattle(ArrayList<Pokemon> playerParty, Pokemon enemyPokemon) {
+        openScreen();
+        try {
+            return runBattle(playerParty, enemyPokemon);
+        } finally {
+            closeScreen();   // 전투가 어떤 경로로 끝나든(승리·패배·도망) 화면은 닫는다
+        }
+    }
+
+    /** 배틀 화면 띄우기 — 실패해도 전투 자체는 로그만으로 계속 굴러가야 한다 */
+    private void openScreen() {
+        try {
+            Window owner = parentComponent == null ? null : SwingUtilities.getWindowAncestor(parentComponent);
+            if (owner == null && parentComponent instanceof Window w) owner = w;
+            final Window fo = owner;
+            SwingUtilities.invokeAndWait(() -> {
+                screen = new BT_Screen(fo);
+                screen.setVisible(true);
+            });
+        } catch (Exception e) {
+            screen = null;
+        }
+    }
+
+    private void closeScreen() {
+        if (screen != null) {
+            screen.closeScreen();
+            screen = null;
+        }
+    }
+
+    private boolean runBattle(ArrayList<Pokemon> playerParty, Pokemon enemyPokemon) {
         printLog("");
-        printLog(" 야생의 " + enemyPokemon.getName() + "이(가) 나타났다!");
+        printLog(" 야생의 " + Josa.i(enemyPokemon.getName()) + " 나타났다!");
 
         Pokemon mine = getFirstAlive(playerParty);
         if (mine == null) {
@@ -174,7 +206,7 @@ public class BattleEngine {
         if (!StatusEffect.NONE.equals(effect) && Math.random() * 100 < chance) {
             if (StatusEffect.NONE.equals(target.getStatusEffect().getStatus())) {
                 target.getStatusEffect().apply(effect);
-                printLog(target.getName() + "은(는) " + effect + " 상태가 되었다!");
+                printLog(Josa.eun(target.getName()) + " " + effect + " 상태가 되었다!");
             }
         }
     }
@@ -196,7 +228,7 @@ public class BattleEngine {
         if (enemy.getStatusEffect().isBurned()) damage /= 2;
 
         mine.takeDamage(damage);
-        printLog(mine.getName() + "은(는) " + damage + "의 데미지를 입었다!");
+        printLog(Josa.eun(mine.getName()) + " " + damage + "의 데미지를 입었다!");
 
         String effectMessage = TypeEffect.getEffectMessage(multiplier);
         if (!effectMessage.isEmpty()) printLog(effectMessage);
@@ -210,7 +242,7 @@ public class BattleEngine {
     }
 
     private void printWin(Pokemon enemy) {
-        printLog(enemy.getName() + "은(는) 쓰러졌다! 전투에서 승리했다!");
+        printLog(Josa.eun(enemy.getName()) + " 쓰러졌다! 전투에서 승리했다!");
     }
 
     // ─── 전투 승리 후 처리: 레벨업 → 기술 습득 → 진화 체크 ────────────────
@@ -224,18 +256,18 @@ public class BattleEngine {
         // 2) 레벨업 기술 습득 체크
         String learnableName = BT_LearnSet.getLearnableSkill(mine.getName(), mine.getLevel());
         if (learnableName != null) {
-            printLog(mine.getName() + "은(는) " + learnableName + "을(를) 떠올렸다!");
+            printLog(Josa.eun(mine.getName()) + " " + Josa.eul(learnableName) + " 떠올렸다!");
             String[] learnOptions = {"배운다", "배우지 않는다"};
             int learnChoice = invokeDialog(() -> JOptionPane.showOptionDialog(
                     parentComponent,
-                    mine.getName() + "은(는) " + learnableName + "을(를) 배울 수 있다!",
+                    Josa.eun(mine.getName()) + " " + Josa.eul(learnableName) + " 배울 수 있다!",
                     "기술 습득",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
                     learnOptions, learnOptions[0]));
             if (learnChoice == 0) {
                 tryLearnSkill(mine, learnableName);
             } else {
-                printLog(learnableName + "을(를) 배우지 않았다.");
+                printLog(Josa.eul(learnableName) + " 배우지 않았다.");
             }
         }
 
@@ -246,15 +278,15 @@ public class BattleEngine {
             String[] evoOptions = {"진화한다", "진화하지 않는다"};
             int evoChoice = invokeDialog(() -> JOptionPane.showOptionDialog(
                     parentComponent,
-                    mine.getName() + "이(가) " + evolvedName + "로 진화할 수 있다!",
+                    Josa.i(mine.getName()) + " " + Josa.ro(evolvedName) + " 진화할 수 있다!",
                     "진화",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
                     evoOptions, evoOptions[0]));
             if (evoChoice == 0) {
-                printLog("축하합니다! " + mine.getName() + "은(는) " + evolvedName + "로 진화했다!");
+                printLog("축하합니다! " + Josa.eun(mine.getName()) + " " + Josa.ro(evolvedName) + " 진화했다!");
                 mine.evolve(evolvedName);
             } else {
-                printLog(mine.getName() + "은(는) 진화를 거부했다.");
+                printLog(Josa.eun(mine.getName()) + " 진화를 거부했다.");
             }
         }
     }
@@ -268,7 +300,7 @@ public class BattleEngine {
         }
         if (mine.canLearnSkill()) {
             mine.addSkill(newSkill);
-            printLog(mine.getName() + "은(는) " + skillName + "을(를) 배웠다!");
+            printLog(Josa.eun(mine.getName()) + " " + Josa.eul(skillName) + " 배웠다!");
         } else {
             List<Skill> skills = mine.getSkills();
             String[] options = new String[skills.size() + 1];
@@ -276,7 +308,7 @@ public class BattleEngine {
                 Skill s = skills.get(i);
                 options[i] = s.getName() + " (" + s.getType() + ", 위력 " + s.getPower() + ")";
             }
-            options[skills.size()] = skillName + "을(를) 배우지 않는다";
+            options[skills.size()] = Josa.eul(skillName) + " 배우지 않는다";
 
             int choice = invokeDialog(() -> JOptionPane.showOptionDialog(
                     parentComponent,
@@ -286,11 +318,11 @@ public class BattleEngine {
                     options, options[0]));
 
             if (choice < 0 || choice == skills.size()) {
-                printLog(mine.getName() + "은(는) " + skillName + "을(를) 배우지 않았다.");
+                printLog(Josa.eun(mine.getName()) + " " + Josa.eul(skillName) + " 배우지 않았다.");
             } else {
                 String forgotName = skills.get(choice).getName();
                 mine.replaceSkill(choice, newSkill);
-                printLog(mine.getName() + "은(는) " + forgotName + "을(를) 잊고, " + skillName + "을(를) 배웠다!");
+                printLog(Josa.eun(mine.getName()) + " " + Josa.eul(forgotName) + " 잊고, " + Josa.eul(skillName) + " 배웠다!");
             }
         }
     }
@@ -342,7 +374,7 @@ public class BattleEngine {
 
     private Pokemon checkMyFainted(Pokemon mine, ArrayList<Pokemon> party) {
         if (mine != null && mine.isFainted()) {
-            printLog(mine.getName() + "은(는) 쓰러졌다!");
+            printLog(Josa.eun(mine.getName()) + " 쓰러졌다!");
             Pokemon next = getFirstAlive(party);
             if (next != null) printLog("가라! " + next.getName() + "!");
             return next;
@@ -358,12 +390,22 @@ public class BattleEngine {
     }
 
     private void printStatus(Pokemon mine, Pokemon enemy) {
+        // 배틀 화면이 HP·타입·상태이상을 항상 보여주므로 로그에 같은 내용을 또 찍지 않는다.
+        // 화면을 못 띄운 경우에만 예전처럼 로그로 남긴다.
+        if (screen != null) {
+            screen.refresh(mine, enemy);
+            return;
+        }
         printLog(String.format("[적] %-8s HP: %3d / %3d  [%s]", enemy.getName(), enemy.getHp(), enemy.getMaxHp(), enemy.getStatusEffect().getStatus()));
         printLog(String.format("[나] %-8s HP: %3d / %3d  [%s]", mine.getName(), mine.getHp(), mine.getMaxHp(), mine.getStatusEffect().getStatus()));
     }
 
     private int chooseAction(Pokemon mine) {
         String[] options = {"싸운다", "포켓몬 교체", "도망간다"};
+        if (screen != null) {
+            waitForLog();
+            return screen.choose(mine.getName() + ", 어떻게 할까?", options);
+        }
         return invokeDialog(() -> JOptionPane.showOptionDialog(
                 parentComponent,
                 "행동을 선택하세요.\n현재 포켓몬: " + mine.getName(),
@@ -389,16 +431,22 @@ public class BattleEngine {
             options[i] = s.getName() + " | 타입: " + s.getType() + " | 위력: " + s.getPower();
         }
 
-        int choice = invokeDialog(() -> JOptionPane.showOptionDialog(
-                parentComponent,
-                "사용할 기술을 선택하세요.",
-                pokemon.getName() + "의 기술",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                options,
-                options[0]
-        ));
+        int choice;
+        if (screen != null) {
+            waitForLog();
+            choice = screen.choose(pokemon.getName() + "의 기술 — 무엇을 쓸까?", options);
+        } else {
+            choice = invokeDialog(() -> JOptionPane.showOptionDialog(
+                    parentComponent,
+                    "사용할 기술을 선택하세요.",
+                    pokemon.getName() + "의 기술",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+            ));
+        }
 
         if (choice < 0 || choice >= moves.size()) return null;
         return moves.get(choice);
