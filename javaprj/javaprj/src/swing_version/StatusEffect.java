@@ -46,18 +46,18 @@ public class StatusEffect implements Serializable {
             case BURN:
                 int burnDmg = Math.max(1, pokemon.getMaxHp() / 8);
                 pokemon.takeDamage(burnDmg);
-                logger.log(pokemon.getName() + "은(는) 화상으로 데미지를 입었다!");
+                logger.log(Josa.eun(pokemon.getName()) + " 화상으로 데미지를 입었다!");
                 break;
             case POISON:
                 int poisonDmg = Math.max(1, pokemon.getMaxHp() / 8);
                 pokemon.takeDamage(poisonDmg);
-                logger.log(pokemon.getName() + "은(는) 독에 걸려 독이 퍼지고 있다!");
+                logger.log(Josa.eun(pokemon.getName()) + " 독에 걸려 독이 퍼지고 있다!");
                 break;
             case SLEEP:
                 sleepTurn--;
                 if (sleepTurn <= 0) {
                     status = NONE;
-                    logger.log(pokemon.getName() + "은(는) 잠에서 깨어났다!");
+                    logger.log(Josa.eun(pokemon.getName()) + " 잠에서 깨어났다!");
                 }
                 break;
             case PARA:
@@ -77,7 +77,7 @@ public class StatusEffect implements Serializable {
             case FREEZE:
                 int freezeDmg = Math.max(1, pokemon.getMaxHp() / 8);
                 pokemon.takeDamage(freezeDmg);
-                logger.log(pokemon.getName() + "은(는) 동상으로 데미지를 입었다!");
+                logger.log(Josa.eun(pokemon.getName()) + " 동상으로 데미지를 입었다!");
                 break;
         }
     }
@@ -88,15 +88,15 @@ public class StatusEffect implements Serializable {
 
     public boolean canAct(Pokemon pokemon, BattleLogger logger) {
         if (isSleeping()) {
-            logger.log(pokemon.getName() + "은(는) 잠들어 있다...");
+            logger.log(Josa.eun(pokemon.getName()) + " 잠들어 있다...");
             return false;
         }
         if (isParalyzed()) {
-            logger.log(pokemon.getName() + "은(는) 마비로 움직이지 못했다!");
+            logger.log(Josa.eun(pokemon.getName()) + " 마비로 움직이지 못했다!");
             return false;
         }
         if (isConfused()) {
-            logger.log(pokemon.getName() + "은(는) 혼란으로 움직이지 못했다!");
+            logger.log(Josa.eun(pokemon.getName()) + " 혼란으로 움직이지 못했다!");
             return false;
         }
         return true;

@@ -81,7 +81,7 @@ public class Gamecontroller {
 		Random random = new Random();
 		Pokemon target = wildList.get(random.nextInt(wildList.size()));
 		BT_Dialog.show("\n==== 야생 포켓몬 발견! ====");
-		BT_Dialog.show(target.getName() + " 이(가) 나타났다!");
+		BT_Dialog.show(Josa.i(target.getName()) + " 나타났다!");
 		BT_Dialog.show("타입: " + target.getType());
 		BT_Dialog.show("Lv." + target.getLevel() + " | HP " + target.getMaxHp() + " | ATK " + target.getAttack());
 		System.out.print("이 포켓몬을 포획하시겠습니까? (y/n) >> ");

@@ -59,7 +59,7 @@ public class Player {
                 BT_Dialog.show("잘못된 번호입니다.");
             }
         } else if (ch.equals("N") || ch.equals("n")) {
-            BT_Dialog.show("파티가 가득 차서 " + wildPokemon.getName() + "은(는) 숲으로 돌아갔습니다.");
+            BT_Dialog.show("파티가 가득 차서 " + Josa.eun(wildPokemon.getName()) + " 숲으로 돌아갔습니다.");
         }
     }
     //모든 포켓몬이 기절했는지 확인하는 메서드
@@ -70,7 +70,7 @@ public class Player {
             }
         }
 
-        BT_Dialog.show(playerName + "은(는) 눈 앞이 캄캄해졌다!");
+        BT_Dialog.show(Josa.eun(playerName) + " 눈 앞이 캄캄해졌다!");
         return true;
     }
 
@@ -127,11 +127,11 @@ public class Player {
                 BT_Dialog.show("-----------------------");
             } else if (action == 2) {
                 // 방생 로직
-                System.out.print("정말로 " + selected.getName() + "을(를) 방생하시겠습니까? (Y/N): ");
+                System.out.print("정말로 " + Josa.eul(selected.getName()) + " 방생하시겠습니까? (Y/N): ");
                 String confirm = sc.nextLine();
                 if (confirm.equalsIgnoreCase("Y")) {
                     party.remove(sel - 1);
-                    BT_Dialog.show(selected.getName() + "을(를) 숲으로 돌려보냈습니다.");
+                    BT_Dialog.show(Josa.eul(selected.getName()) + " 숲으로 돌려보냈습니다.");
                     if (party.isEmpty()) break;
                 }
             }

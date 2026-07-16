@@ -265,7 +265,7 @@ public class MapMain extends JFrame {
     private void visitGym() {
         appendLog("체육관 도착!");
         appendLog("안녕하세요! 미래의 챔피언! 체육관에 도전해주셔서 감사합니다!");
-        appendLog("오호... " + player.getFirstPokemonName() + "와(과) 함께 왔군요.");
+        appendLog("오호... " + Josa.wa(player.getFirstPokemonName()) + " 함께 왔군요.");
         appendLog(player.getFirstPokemonName() + "의 힘을 시험해보겠습니다!");
         appendLog("부숴버려라! 기라티나!");
         appendLog("체육관 관장 월로가 승부를 걸어왔다!");
@@ -339,7 +339,7 @@ public class MapMain extends JFrame {
 
                     int[] capture = {JOptionPane.NO_OPTION};
                     invokeOnEDT(() -> capture[0] = JOptionPane.showConfirmDialog(MapMain.this,
-                            wildPokemon.getName() + "을(를) 포획할까요?", "포획 시도", JOptionPane.YES_NO_OPTION));
+                            Josa.eul(wildPokemon.getName()) + " 포획할까요?", "포획 시도", JOptionPane.YES_NO_OPTION));
 
                     if (capture[0] == JOptionPane.YES_OPTION) {
                         if (Math.random() < 0.9) {
@@ -347,7 +347,7 @@ public class MapMain extends JFrame {
                             String[] destOptions = {"파티에 추가", "박스로 이동"};
                             int[] dest = {-1};
                             invokeOnEDT(() -> dest[0] = JOptionPane.showOptionDialog(MapMain.this,
-                                    wildPokemon.getName() + "을(를) 어떻게 할까요?", "포획 성공!",
+                                    Josa.eul(wildPokemon.getName()) + " 어떻게 할까요?", "포획 성공!",
                                     JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
                                     null, destOptions, destOptions[0]));
 
@@ -375,7 +375,7 @@ public class MapMain extends JFrame {
                                         if (selected[0] >= 0) {
                                             Pokemon replaced = player.swapPokemon(selected[0], wildPokemon);
                                             player.addToBox(replaced);
-                                            appendLog(replaced.getName() + "을(를) 박스로 이동했습니다!");
+                                            appendLog(Josa.eul(replaced.getName()) + " 박스로 이동했습니다!");
                                             appendLog(wildPokemon.getName() + " 포획 성공! 파티에 추가되었습니다.");
                                             updatePlayerInfo();
                                         }
@@ -383,7 +383,7 @@ public class MapMain extends JFrame {
                                 }
                             } else if (dest[0] == 1) {
                                 player.addToBox(wildPokemon);
-                                appendLog(wildPokemon.getName() + "을(를) 박스로 이동했습니다!");
+                                appendLog(Josa.eul(wildPokemon.getName()) + " 박스로 이동했습니다!");
                             }
                         } else {
                             appendLog("아깝다! 조금만 더 하면 잡을 수 있었는데!");

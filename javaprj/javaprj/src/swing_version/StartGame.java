@@ -296,7 +296,7 @@ public class StartGame {
 
         private void confirmStarter() {
             showChoiceButtons(
-                    playerName + "은(는) " + selectedStarter.type + " 포켓몬 " + selectedStarter.getName() + "가 맘에 드는 거니?",
+                    Josa.eun(playerName) + " " + selectedStarter.type + " 포켓몬 " + Josa.i(selectedStarter.getName()) + " 맘에 드는 거니?",
                     new String[]{"예", "아니요"},
                     idx -> {
                         if (idx == 0) {
@@ -317,7 +317,7 @@ public class StartGame {
             }
 
             playMessages(new String[]{
-                    playerName + "은(는) 오박사에게 " + selectedStarter.getName() + "를(을) 받았다!"
+                    Josa.eun(playerName) + " 오박사에게 " + Josa.eul(selectedStarter.getName()) + " 받았다!"
             }, this::askNickname);
         }
 
@@ -365,7 +365,7 @@ public class StartGame {
                     : selectedStarter.getName();
 
             playMessages(new String[]{
-                    pokemonName + "은(는) " + playerName + "의 포켓몬이 되었다!",
+                    Josa.eun(pokemonName) + " " + playerName + "의 포켓몬이 되었다!",
                     playerName + "! 준비는 되었는가?",
                     "이제부터 너만의 이야기가 시작된다!",
                     "꿈과 모험과!",
