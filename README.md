@@ -148,7 +148,7 @@ flowchart TD
 
 | 계층 | 클래스 | 역할 | 담당 |
 | --- | --- | --- | --- |
-| **전투** | `BattleEngine`, `BattleLogger`, `BT_Dialog` | 턴 루프 · 데미지/상태이상 계산 · 전투 로그 출력 | **본인 직접 구현** |
+| **전투** | `BattleEngine`, `BattleLogger`, `BT_Dialog`, `BT_Screen`, `Josa` | 턴 루프 · 데미지/상태이상 계산 · 전투 화면 · 로그 출력(한글 조사 처리) | **본인 직접 구현** |
 | **데이터** | `GameDataManager`, `Pokedex`, `TypeEffect`, `BT_LearnSet`, `BT_Evolution` | 스킬·포켓몬·상성표·학습셋·진화표 정의 | **본인 직접 구현** |
 | 모델 | `Pokemon`, `Skill`, `StatusEffect`, `Player`, `StartingPokemon` | 도메인 객체 | 본인 설계 · 공동 구현 |
 | 맵 | `MapMain`, `MapPanel`, `MapPlayer`, `Map`, `Location` | 맵 렌더링 · 플레이어 이동 · 야생 조우 | 팀원 구현 |
